@@ -9,12 +9,27 @@ import time
 
 # Instantiate Robotarium object
 N = 4
-# initial_conditions = np.array(np.mat('5 0.5 -0.5 0 0.28; 0.8 -0.3 -0.75 0.1 0.34; 0 0 0 0 0'))
-initial_conditions = generate_initial_conditions(N)
-# for i in initial_conditions[]
-print(initial_conditions.shape)
+initial_conditions = np.array(np.mat('5 4.8 -0.5 0 0.28; -0.3 -0.3 -0.75 0.1 0.34; 0 0 0 0 0'))
+# initial_conditions = generate_initial_conditions(N)
+random_points = False
+for i in range(N):
+    for j in range(i+1, N):
+        test_1 = [initial_conditions[1,i] , initial_conditions[2,i]]
+        test_2 = [initial_conditions[1,j] , initial_conditions[2,j]]
+        dist = np.linalg.norm([(test_1[0] - test_2[0]),(test_1[1] - test_2[1])])
+        if dist <= 0.25:
+            random_points = True
+            print('Initialized points too close, generating random points first')
+        
+if random_points:
+    r = robotarium.Robotarium(number_of_robots=N, show_figure=True, initial_conditions=generate_initial_conditions(N), sim_in_real_time=False)
+else:
+    r = robotarium.Robotarium(number_of_robots=N, show_figure=True, initial_conditions=initial_conditions, sim_in_real_time=False)
+        # assert dist < 0.25, 'Initialized Points too close '
+    
+# print(initial_conditions.shape[1])
 
-print(initial_conditions)
+# print(initial_conditions)
 
 r = robotarium.Robotarium(number_of_robots=N, show_figure=True, initial_conditions=initial_conditions, sim_in_real_time=False)
 
@@ -114,7 +129,6 @@ plt.text(-8.5, 8.5, "Garage", size=10,
                    fc=(1., 0.8, 0.8),
                    )
          )
-
 
 # define x initially
 x = r.get_poses()
